@@ -1,5 +1,4 @@
-(() => ({
-  name: 'planner',
+name: 'planner',
   type: 'CONTENT_COMPONENT',
   icon: 'TitleIcon',
   orientation: 'HORIZONTAL',
@@ -12,7 +11,6 @@
     },
   ],
   jsx: (() => {
-
     const users = [
       {
         id: 1,
@@ -70,7 +68,6 @@
         ],
       },
     ];
-    
     const colors = [
       '#FF5733',
       '#FF8C00',
@@ -88,10 +85,6 @@
       '#8B0000',
       '#2E8B57',
   ];
-  
-
-
-
     const getDaysInMonth = (year, month) => {
       return new Array(31 - new Date(year, month, 32).getDate())
         .fill('')
@@ -99,12 +92,10 @@
     };
     const convertEvents = (users) => {
       let index = 0;
-    
       return users.flatMap(user =>
         user.events.map((event) => {
-          const color = colors[index % colors.length]; 
-          index++; 
-    
+          const color = colors[index % colors.length];
+          index++;
           return {
             id: event.id,
             title: event.name,
@@ -116,27 +107,13 @@
         })
       );
     };
-    
-
-
-
-
     const events = convertEvents(users)
-    const titlesArray = user.events.map(titles => titles.title);
+    const titlesArray = events.map(titles => titles.title);
     const eventNames = [... new Set(titlesArray)]
     const now = new Date()
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-    const legenda = 
-      eventNames.map((names) => {
-        return{
-          title: names,
-          color: 
-        }
-      })
-
-
     return (
       <div className={classes.calendarContainer}>
         <div className={classes.topwrapper}>
@@ -150,7 +127,6 @@
             <ul className={classes.legendUl}>
               {events.map((event) => (
                 <>
-
                   <li key={event.title}>
                     <span
                       style={{
@@ -165,12 +141,9 @@
                     <span className={classes.span1}>{event.title}</span></li>
                 </>
               ))
-
-
               }
             </ul>
           </div>
-
         </div>
         <table className={classes.calendarTable}>
           <thead>
@@ -181,7 +154,6 @@
               ))}
             </tr>
           </thead>
-
           <tbody>
   {users.map((user) => (
     <tr key={user.name} className={classes.tableRow}>
@@ -190,7 +162,7 @@
         const event = events.filter(event => new Date(event.start).getDate() === day && event.resource === user.name);
         return (
           <td key={day} className={classes.tableCell} style={event.length > 0 ? {
-            backgroundColor: event[0].color,  
+            backgroundColor: event[0].color,
             cursor: 'pointer',
           } : {}}>
             {event.length > 0 ? (
@@ -208,13 +180,10 @@
     </tr>
   ))}
 </tbody>
-
-
         </table>
       </div>
     );
   })(),
-
   styles: B => t => {
     const style = new B.Styling(t);
     return {
@@ -228,7 +197,6 @@
         fontFamily: 'Arial, sans-serif',
         margin: '30px'
       },
-
       topwrapper: {
         display: 'flex',
         alignItems: 'center',
@@ -238,11 +206,10 @@
       span1: {
         marginRight: "8px"
       },
-
       select: {
         fontSize: '14px',
         color: '#333',
-        backgroundColor: '#f9f9f9',
+        backgroundColor: '#F9F9F9',
         border: '1px solid #ccc',
         borderRadius: '4px',
       },
@@ -250,7 +217,7 @@
         borderBottom: '2px solid #ddd',
       },
       tableHeader: {
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#F4F4F4',
         padding: '12px',
         textAlign: 'center',
         fontSize: '14px',
@@ -263,7 +230,7 @@
         border: '1px solid #ddd',
       },
       hasEvent: {
-        backgroundColor: '#ffe8e8',
+        backgroundColor: '#FFE8E8',
         cursor: 'pointer',
         transition: 'background-color 0.3s',
       },
@@ -281,4 +248,4 @@
       }
     };
   },
-}))(); 
+}))();
