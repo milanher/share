@@ -4,13 +4,6 @@
   icon: 'TitleIcon',
   orientation: 'HORIZONTAL',
   allowedTypes: [],
-  dependencies: [
-    {
-      label: 'Calendar',
-      package: 'npm:react-big-calendar@1.15.0',
-      imports: ['*'],
-    },
-  ],
   jsx: (() => {
 
     const users = [
@@ -88,30 +81,41 @@
       '#8B0000',
       '#2E8B57',
   ];
-  
-
-
-
     const getDaysInMonth = (year, month) => {
       return new Array(31 - new Date(year, month, 32).getDate())
         .fill('')
         .map((_, index) => index + 1);
     };
-    const convertEvents = (users) => {
+    const legenda = (users) => {
       let index = 0;
-    
+      const uniqueEvents = [];
+      users.forEach(user => {
+        user.events.forEach(event => {
+          if (!uniqueEvents.some(item => item.title === event.name)) {
+            const colored = colors[index % colors.length];
+            index++;
+            uniqueEvents.push({
+              title: event.name, 
+              color: colored
+            });
+          }
+        });
+      });
+      return uniqueEvents;
+    };
+    const legend = legenda(users)
+    console.log("yuh", legend)
+    const convertEvents = (users) => {
       return users.flatMap(user =>
         user.events.map((event) => {
-          const color = colors[index % colors.length]; 
-          index++; 
-    
+          const colorlegenda = legend.find(item => item.title === event.name);
           return {
             id: event.id,
             title: event.name,
             start: new Date(event.startDate),
             end: new Date(event.endDate),
             resource: user.name,
-            color: color,
+            color: colorlegenda ? colorlegenda.color : 'grey', 
           };
         })
       );
@@ -119,22 +123,12 @@
     
 
 
-
-
     const events = convertEvents(users)
-    const titlesArray = user.events.map(titles => titles.title);
-    const eventNames = [... new Set(titlesArray)]
+    console.log("heyy", events)
     const now = new Date()
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-    const legenda = 
-      eventNames.map((names) => {
-        return{
-          title: names,
-          color: 
-        }
-      })
 
 
     return (
@@ -148,9 +142,8 @@
           </select>
           <div className={classes.legend}>
             <ul className={classes.legendUl}>
-              {events.map((event) => (
+              {legend.map((event) => (
                 <>
-
                   <li key={event.title}>
                     <span
                       style={{
@@ -165,8 +158,6 @@
                     <span className={classes.span1}>{event.title}</span></li>
                 </>
               ))
-
-
               }
             </ul>
           </div>
