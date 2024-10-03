@@ -1,16 +1,11 @@
-name: 'planner',
+(() => ({
+  name: 'planner',
   type: 'CONTENT_COMPONENT',
   icon: 'TitleIcon',
   orientation: 'HORIZONTAL',
   allowedTypes: [],
-  dependencies: [
-    {
-      label: 'Calendar',
-      package: 'npm:react-big-calendar@1.15.0',
-      imports: ['*'],
-    },
-  ],
   jsx: (() => {
+
     const users = [
       {
         id: 1,
@@ -68,6 +63,7 @@ name: 'planner',
         ],
       },
     ];
+    
     const colors = [
       '#FF5733',
       '#FF8C00',
@@ -90,30 +86,51 @@ name: 'planner',
         .fill('')
         .map((_, index) => index + 1);
     };
-    const convertEvents = (users) => {
+    const legenda = (users) => {
       let index = 0;
+      const uniqueEvents = [];
+      users.forEach(user => {
+        user.events.forEach(event => {
+          if (!uniqueEvents.some(item => item.title === event.name)) {
+            const colored = colors[index % colors.length];
+            index++;
+            uniqueEvents.push({
+              title: event.name, 
+              color: colored
+            });
+          }
+        });
+      });
+      return uniqueEvents;
+    };
+    const legend = legenda(users)
+    console.log("yuh", legend)
+    const convertEvents = (users) => {
       return users.flatMap(user =>
         user.events.map((event) => {
-          const color = colors[index % colors.length];
-          index++;
+          const colorlegenda = legend.find(item => item.title === event.name);
           return {
             id: event.id,
             title: event.name,
             start: new Date(event.startDate),
             end: new Date(event.endDate),
             resource: user.name,
-            color: color,
+            color: colorlegenda ? colorlegenda.color : 'grey', 
           };
         })
       );
     };
+    
+
+
     const events = convertEvents(users)
-    const titlesArray = events.map(titles => titles.title);
-    const eventNames = [... new Set(titlesArray)]
+    console.log("heyy", events)
     const now = new Date()
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+
+
     return (
       <div className={classes.calendarContainer}>
         <div className={classes.topwrapper}>
@@ -125,7 +142,7 @@ name: 'planner',
           </select>
           <div className={classes.legend}>
             <ul className={classes.legendUl}>
-              {events.map((event) => (
+              {legend.map((event) => (
                 <>
                   <li key={event.title}>
                     <span
@@ -144,6 +161,7 @@ name: 'planner',
               }
             </ul>
           </div>
+
         </div>
         <table className={classes.calendarTable}>
           <thead>
@@ -154,6 +172,7 @@ name: 'planner',
               ))}
             </tr>
           </thead>
+
           <tbody>
   {users.map((user) => (
     <tr key={user.name} className={classes.tableRow}>
@@ -162,7 +181,7 @@ name: 'planner',
         const event = events.filter(event => new Date(event.start).getDate() === day && event.resource === user.name);
         return (
           <td key={day} className={classes.tableCell} style={event.length > 0 ? {
-            backgroundColor: event[0].color,
+            backgroundColor: event[0].color,  
             cursor: 'pointer',
           } : {}}>
             {event.length > 0 ? (
@@ -180,10 +199,13 @@ name: 'planner',
     </tr>
   ))}
 </tbody>
+
+
         </table>
       </div>
     );
   })(),
+
   styles: B => t => {
     const style = new B.Styling(t);
     return {
@@ -197,6 +219,7 @@ name: 'planner',
         fontFamily: 'Arial, sans-serif',
         margin: '30px'
       },
+
       topwrapper: {
         display: 'flex',
         alignItems: 'center',
@@ -206,10 +229,11 @@ name: 'planner',
       span1: {
         marginRight: "8px"
       },
+
       select: {
         fontSize: '14px',
         color: '#333',
-        backgroundColor: '#F9F9F9',
+        backgroundColor: '#f9f9f9',
         border: '1px solid #ccc',
         borderRadius: '4px',
       },
@@ -217,7 +241,7 @@ name: 'planner',
         borderBottom: '2px solid #ddd',
       },
       tableHeader: {
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#f4f4f4',
         padding: '12px',
         textAlign: 'center',
         fontSize: '14px',
@@ -230,7 +254,7 @@ name: 'planner',
         border: '1px solid #ddd',
       },
       hasEvent: {
-        backgroundColor: '#FFE8E8',
+        backgroundColor: '#ffe8e8',
         cursor: 'pointer',
         transition: 'background-color 0.3s',
       },
@@ -248,4 +272,4 @@ name: 'planner',
       }
     };
   },
-}))();
+}))(); 
