@@ -5,7 +5,6 @@
   orientation: 'HORIZONTAL',
   allowedTypes: [],
   jsx: (() => {
-
     const users = [
       {
         id: 1,
@@ -80,12 +79,14 @@
       '#FF6347',
       '#8B0000',
       '#2E8B57',
-  ];
+    ];
+    
     const getDaysInMonth = (year, month) => {
       return new Array(31 - new Date(year, month, 32).getDate())
         .fill('')
         .map((_, index) => index + 1);
     };
+    
     const legenda = (users) => {
       let index = 0;
       const uniqueEvents = [];
@@ -103,8 +104,8 @@
       });
       return uniqueEvents;
     };
-    const legend = legenda(users)
-    console.log("yuh", legend)
+    
+    const legend = legenda(users);
     const convertEvents = (users) => {
       return users.flatMap(user =>
         user.events.map((event) => {
@@ -121,15 +122,11 @@
       );
     };
     
-
-    
-    const events = convertEvents(users)
-    console.log("heyy", events)
-    const now = new Date()
+    const events = convertEvents(users);
+    const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const daysInMonth = getDaysInMonth(currentYear, currentMonth);
-
 
     return (
       <div className={classes.calendarContainer}>
@@ -143,25 +140,22 @@
           <div className={classes.legend}>
             <ul className={classes.legendUl}>
               {legend.map((event) => (
-                <>
-                  <li key={event.title}>
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        width: '10px',
-                        height: '10px',
-                        backgroundColor: event.color,
-                        borderRadius: '50%',
-                        marginRight: '8px',
-                      }}
-                    />
-                    <span className={classes.span1}>{event.title}</span></li>
-                </>
-              ))
-              }
+                <li key={event.title}>
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '10px',
+                      height: '10px',
+                      backgroundColor: event.color,
+                      borderRadius: '50%',
+                      marginRight: '8px',
+                    }}
+                  />
+                  <span className={classes.span1}>{event.title}</span>
+                </li>
+              ))}
             </ul>
           </div>
-
         </div>
         <table className={classes.calendarTable}>
           <thead>
@@ -172,40 +166,35 @@
               ))}
             </tr>
           </thead>
-
           <tbody>
-  {users.map((user) => (
-    <tr key={user.name} className={classes.tableRow}>
-      <td className={classes.tableCell}>{user.name}</td>
-      {daysInMonth.map((day) => {
-        const event = events.filter(event => new Date(event.start).getDate() === day && event.resource === user.name);
-        return (
-          <td key={day} className={classes.tableCell} style={event.length > 0 ? {
-            backgroundColor: event[0].color,  
-            cursor: 'pointer',
-          } : {}}>
-            {event.length > 0 ? (
-              <div className={classes.eventLabel}>
-                {event.map(Event => (
-                  <div key={Event.id}>
-                    {Event.title}
-                  </div>
-                ))}
-              </div>
-            ) : null}
-          </td>
-        );
-      })}
-    </tr>
-  ))}
-</tbody>
-
-
+            {users.map((user) => (
+              <tr key={user.name} className={classes.tableRow}>
+                <td className={classes.nameCell}>{user.name}</td>
+                {daysInMonth.map((day) => {
+                  const event = events.filter(event => new Date(event.start).getDate() === day && event.resource === user.name);
+                  return (
+                    <td key={day} className={classes.tableCell} style={event.length > 0 ? {
+                      backgroundColor: event[0].color,  
+                      cursor: 'pointer',
+                    } : {}}>
+                      {event.length > 0 ? (
+                        <div className={classes.eventLabel}>
+                          {event.map(Event => (
+                            <div key={Event.id}></div>
+                          ))}
+                        </div>
+                      ) : null}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     );
   })(),
-
+  
   styles: B => t => {
     const style = new B.Styling(t);
     return {
@@ -215,24 +204,20 @@
         fontFamily: 'Arial, sans-serif',
       },
       calendarTable: {
-        width: 'auto',
-        maxWidth: '100vw',
-        tableLayout: 'fixed',
-        fontFamily: 'Arial, sans-serif',
-        boxSizing: 'border-box'
+        width: '100%',
+        tableLayout: 'fixed',  
       },
-
-      topwrapper: {
-        display: 'flex',
-        alignItems: 'center',
-        margin: '10px',
-        gap: '10px',
-        width: '100vw'
+      tableHeader: {
+        whiteSpace: 'nowrap',
+        textAlign: 'center',
+        padding: '12px',
+        backgroundColor: '#f4f4f4',
+        fontSize: '14px',
+        borderBottom: '2px solid #ddd',
       },
       span1: {
         marginRight: "8px"
       },
-
       select: {
         fontSize: '14px',
         color: '#333',
@@ -244,20 +229,28 @@
         maxWidth: '100vw',
         borderBottom: '2px solid #ddd',
       },
-      tableHeader: {
-        maxWidth: '100vw',
-        backgroundColor: '#f4f4f4',
-        padding: '12px',
-        textAlign: 'center',
-        fontSize: '14px',
-        borderBottom: '2px solid #ddd',
+      topwrapper: {
+        display: 'flex',
+        alignItems: 'center',
+        margin: '10px',
+        gap: '10px',
+        width: '100vw',            
       },
       tableCell: {
         padding: '8px',
         textAlign: 'center',
-        minHeight: '50px',
-        minWidth: '40px',
+        minWidth: '40px',          
+        maxWidth: '80px',          
+        overflow: 'hidden',        
         border: '1px solid #ddd',
+      },
+      nameCell: {
+        padding: '8px',
+        textAlign: 'center',
+        overflow: 'hidden',        
+        border: '1px solid #ddd',
+        whiteSpace: 'nowrap',
+        minWidth: '100px'
       },
       hasEvent: {
         backgroundColor: '#ffe8e8',
@@ -278,4 +271,4 @@
       }
     };
   },
-}))(); 
+}))();
