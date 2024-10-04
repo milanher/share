@@ -26,7 +26,7 @@
         name: 'Charlie',
         events: [
           { id: 'e4', name: 'Kickoff Meeting', startDate: '2024-10-01', endDate: '2024-10-01' },
-          { id: 'e5', name: 'Code Review', startDate: '2024-10-07', endDate: '2024-10-07' },
+          { id: 'e5', name: 'Code Review', startDate: '2021-10-07', endDate: '2021-10-07' },
         ],
       },
       {
@@ -122,8 +122,7 @@
       const totaldays = new Array(new Date(year, month + 1, 0).getDate());
       for (let day = 1; day <= totaldays.length; day++) {
         const daydate = new Date(year, month, day);
-        const dateDay = daydate.getDay()
-        const weekend = dateDay === 0 || dateDay === 6
+        const weekend = daydate.getDay() === 0 || daydate.getDay() === 6
         days.push({
           day,
           weekend
@@ -140,9 +139,18 @@
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     const [selectedMonth, setSelectedMonth] = useState(`${currentMonth}`);
+    const [selectedYear, setSelectedYear] = useState(`${currentYear}`);
     const defaultDays = getDaysInMonth(currentYear, currentMonth)
     const [daysInMonth, setdaysInMonth] = React.useState(defaultDays);
-    const handleSelectChange = (event) => {
+    const updateDaysInMonth = (year, month) => {
+      const days = getDaysInMonth(parseInt(year), parseInt(month));
+      setdaysInMonth(days);
+    };
+    const yearSelectChange = (event) => {
+      setSelectedYear(event.target.value);
+      updateDaysInMonth(event.target.value, selectedMonth);  
+    };
+    const monthSelectChange = (event) => {
       const monthindex = parseInt(event.target.value, 10);
       const days = getDaysInMonth(currentYear, monthindex);
       setdaysInMonth(days);
@@ -154,10 +162,13 @@
     return (
       <div className={classes.calendarContainer}>
         <div className={classes.topwrapper}>
-          <select className={classes.select}>
-            <option>{currentYear}</option>
+          <select className={classes.select} value={selectedYear} onChange={yearSelectChange}>
+            {Array.from({ length: 5 }, (_, i) => (
+              <option key={i} value={currentYear - i}>{currentYear - i}</option>
+            ))}
           </select>
-          <select className={classes.select} value={selectedMonth} onChange={handleSelectChange}>
+
+          <select className={classes.select} value={selectedMonth} onChange={monthSelectChange}>
             <option value="0">January</option>
             <option value="1">February</option>
             <option value="2">March</option>
@@ -209,6 +220,7 @@
                   const event = events.filter(event =>
                   (new Date(event.start).getDate() === day.day &&
                     new Date(event.start).getMonth() === parseInt(selectedMonth, 10) &&
+                    new Date(event.start).getFullYear() === parseInt(selectedYear, 10) &&
                     event.resource === user.id)
                   )
                   console.log(event)
@@ -219,7 +231,8 @@
                           ? (event.length > 0
                             ? { backgroundColor: event[0].color }
                             : {})
-                          : {backgroundColor: "darkgray",
+                          : {
+                            backgroundColor: "darkgray",
 
                           }
                       }
