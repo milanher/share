@@ -43,6 +43,6 @@ const options = {
   }),
 };
 
-export default prefab('Hello World', attributes, undefined, [
+export default prefab('planner', attributes, undefined, [
   component('planner', { options }, []),
 ]);

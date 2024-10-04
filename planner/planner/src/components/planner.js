@@ -62,7 +62,7 @@
         ],
       },
     ];
-    
+
     const colors = [
       '#FF5733',
       '#FF8C00',
@@ -80,13 +80,9 @@
       '#8B0000',
       '#2E8B57',
     ];
-    
-    const getDaysInMonth = (year, month) => {
-      return new Array(31 - new Date(year, month, 32).getDate())
-        .fill('')
-        .map((_, index) => index + 1);
-    };
-    
+
+
+
     const legenda = (users) => {
       let index = 0;
       const uniqueEvents = [];
@@ -96,7 +92,7 @@
             const colored = colors[index % colors.length];
             index++;
             uniqueEvents.push({
-              title: event.name, 
+              title: event.name,
               color: colored
             });
           }
@@ -104,7 +100,7 @@
       });
       return uniqueEvents;
     };
-    
+
     const legend = legenda(users);
     const convertEvents = (users) => {
       return users.flatMap(user =>
@@ -115,18 +111,45 @@
             title: event.name,
             start: new Date(event.startDate),
             end: new Date(event.endDate),
-            resource: user.name,
-            color: colorlegenda ? colorlegenda.color : 'grey', 
+            resource: user.id,
+            color: colorlegenda ? colorlegenda.color : 'grey',
           };
         })
       );
+    }
+    const getDaysInMonth = (year, month) => {
+      let days = []
+      const totaldays = new Array(new Date(year, month + 1, 0).getDate());
+      for (let day = 1; day <= totaldays.length; day++) {
+        const daydate = new Date(year, month, day);
+        const dateDay = daydate.getDay()
+        const weekend = dateDay === 0 || dateDay === 6
+        days.push({
+          day,
+          weekend
+        })
+      }
+      console.log(days)
+      return (days)
+
     };
-    
+
+
     const events = convertEvents(users);
     const now = new Date();
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
-    const daysInMonth = getDaysInMonth(currentYear, currentMonth);
+    const [selectedMonth, setSelectedMonth] = useState(`${currentMonth}`);
+    const defaultDays = getDaysInMonth(currentYear, currentMonth)
+    const [daysInMonth, setdaysInMonth] = React.useState(defaultDays);
+    const handleSelectChange = (event) => {
+      const monthindex = parseInt(event.target.value, 10);
+      const days = getDaysInMonth(currentYear, monthindex);
+      setdaysInMonth(days);
+      setSelectedMonth(`${monthindex}`)
+    };
+
+
 
     return (
       <div className={classes.calendarContainer}>
@@ -134,9 +157,21 @@
           <select className={classes.select}>
             <option>{currentYear}</option>
           </select>
-          <select className={classes.select}>
-            <option>{currentMonth}</option>
+          <select className={classes.select} value={selectedMonth} onChange={handleSelectChange}>
+            <option value="0">January</option>
+            <option value="1">February</option>
+            <option value="2">March</option>
+            <option value="3">April</option>
+            <option value="4">May</option>
+            <option value="5">June</option>
+            <option value="6">July</option>
+            <option value="7">August</option>
+            <option value="8">September</option>
+            <option value="9">October</option>
+            <option value="10">November</option>
+            <option value="11">December</option>
           </select>
+
           <div className={classes.legend}>
             <ul className={classes.legendUl}>
               {legend.map((event) => (
@@ -157,26 +192,38 @@
             </ul>
           </div>
         </div>
-        <table className={classes.calendarTable}>
+        <table className={classes.calendarTable} >
           <thead>
             <tr className={classes.tableRow}>
               <th className={classes.tableHeader}>Name</th>
               {daysInMonth.map((day) => (
-                <th key={day} className={classes.tableHeader}>{day}</th>
+                <th key={day.day} className={classes.tableHeader}>{day.day}{console.log("sdfdsgfaw", day.day)}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.name} className={classes.tableRow}>
+              <tr key={user.id} className={classes.tableRow}>
                 <td className={classes.nameCell}>{user.name}</td>
                 {daysInMonth.map((day) => {
-                  const event = events.filter(event => new Date(event.start).getDate() === day && event.resource === user.name);
+                  const event = events.filter(event =>
+                  (new Date(event.start).getDate() === day.day &&
+                    new Date(event.start).getMonth() === parseInt(selectedMonth, 10) &&
+                    event.resource === user.id)
+                  )
+                  console.log(event)
                   return (
-                    <td key={day} className={classes.tableCell} style={event.length > 0 ? {
-                      backgroundColor: event[0].color,  
-                      cursor: 'pointer',
-                    } : {}}>
+                    <td key={day.day} className={classes.tableCell}
+                      style={
+                        !day.weekend
+                          ? (event.length > 0
+                            ? { backgroundColor: event[0].color }
+                            : {})
+                          : {backgroundColor: "darkgray",
+
+                          }
+                      }
+                    >
                       {event.length > 0 ? (
                         <div className={classes.eventLabel}>
                           {event.map(Event => (
@@ -194,81 +241,78 @@
       </div>
     );
   })(),
-  
   styles: B => t => {
     const style = new B.Styling(t);
     return {
       calendarContainer: {
-        overflowX: 'hidden',
-        maxWidth: '100vw',
+        overflowX: 'auto',
         fontFamily: 'Arial, sans-serif',
       },
       calendarTable: {
-        width: '100%',
-        tableLayout: 'fixed',  
+        borderCollapse: 'collapse',
       },
       tableHeader: {
         whiteSpace: 'nowrap',
         textAlign: 'center',
-        padding: '12px',
-        backgroundColor: '#f4f4f4',
+        backgroundColor: '#F4F4F4',
         fontSize: '14px',
+        padding: '8px',
         borderBottom: '2px solid #ddd',
-      },
-      span1: {
-        marginRight: "8px"
-      },
-      select: {
-        fontSize: '14px',
-        color: '#333',
-        backgroundColor: '#f9f9f9',
-        border: '1px solid #ccc',
-        borderRadius: '4px',
+        height: '40px',
       },
       tableRow: {
-        maxWidth: '100vw',
         borderBottom: '2px solid #ddd',
       },
       topwrapper: {
         display: 'flex',
         alignItems: 'center',
-        margin: '10px',
         gap: '10px',
-        width: '100vw',            
+        marginBottom: '10px',
+      },
+      select: {
+        fontSize: '14px',
+        color: '#333',
+        backgroundColor: '#F9F9F9',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        padding: '5px',
       },
       tableCell: {
-        padding: '8px',
         textAlign: 'center',
-        minWidth: '40px',          
-        maxWidth: '80px',          
-        overflow: 'hidden',        
         border: '1px solid #ddd',
+        height: '40px',
+        width: '40px',
+        padding: '0px',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
       },
       nameCell: {
+        textAlign: 'left',
+        height: '40px',
+        width: '150px',
         padding: '8px',
-        textAlign: 'center',
-        overflow: 'hidden',        
         border: '1px solid #ddd',
-        whiteSpace: 'nowrap',
-        minWidth: '100px'
-      },
-      hasEvent: {
-        backgroundColor: '#ffe8e8',
-        cursor: 'pointer',
-        transition: 'background-color 0.3s',
+        fontWeight: 'bold',
+        backgroundColor: '#F9F9F9',
+        whiteSpace: 'normal',
+        overflow: 'visible',
       },
       eventLabel: {
         backgroundColor: 'inherit',
         color: '#fff',
-        padding: '4px',
         borderRadius: '4px',
         fontSize: '12px',
         textAlign: 'center',
       },
       legendUl: {
         display: 'flex',
-        justifyContent: 'space-between'
-      }
+        justifyContent: 'space-between',
+        listStyleType: 'none',
+        padding: 0,
+        margin: '0 10px',
+        gap: '15px'
+      },
     };
-  },
+  }
 }))();
