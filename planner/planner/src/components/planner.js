@@ -66,12 +66,12 @@
     const isDev = env === 'dev';
 
     const colors = [
-      '#FF5733',
-      '#FF8C00',
-      '#FFD700',
-      '#32CD32',
-      '#4682B4',
-      '#6A5ACD',
+      '#d3d7de',
+      '#1f84d2',
+      '#023a63',
+      '#91abbe',
+      '#d0010d',
+      '#e2ac30',
       '#FF1493',
       '#FF69B4',
       '#FF4500',
@@ -85,9 +85,14 @@
 
 
 
+
     const legenda = (users) => {
       let index = 0;
       const uniqueEvents = [];
+      uniqueEvents.push({
+        title: "Weekend",
+        color: "darkgray"
+      })
       users.forEach(user => {
         user.events.forEach(event => {
           if (!uniqueEvents.some(item => item.title === event.name)) {
@@ -102,7 +107,6 @@
       });
       return uniqueEvents;
     };
-
     const legend = legenda(users);
     const convertEvents = (users) => {
       return users.flatMap(user =>
@@ -169,13 +173,13 @@
         )}
         <div className={classes.topwrapper}>
           <Icon name="FileIcon" className={classes.icon}/>
-          <select className={classes.select} value={selectedYear} onChange={yearSelectChange}>
+          <select className={classes.select1} value={selectedYear} onChange={yearSelectChange}>
             {Array.from({ length: 20 }, (_, i) => (
               <option key={i} value={currentYear - i}>{currentYear - i}</option>
             ))}
           </select>
 
-          <select className={classes.select} src="" value={selectedMonth} onChange={monthSelectChange}>
+          <select className={classes.select2} src="" value={selectedMonth} onChange={monthSelectChange}>
           <Icon name="FileIcon" className={classes.icon}/>
             <option value="0">January</option>
             <option value="1">February</option>
@@ -194,18 +198,18 @@
           <div className={classes.legend}>
             <ul className={classes.legendUl}>
               {legend.map((event) => (
-                <li key={event.title}>
-                  <span
+                <li className={classes.legendIl} key={event.title}>
+                  <div
                     style={{
                       display: 'inline-block',
-                      width: '10px',
-                      height: '10px',
+                      width: '20px',
+                      height: '20px',
                       backgroundColor: event.color,
-                      borderRadius: '50%',
-                      marginRight: '8px',
+                      marginRight: '10px',
+                      borderRadius: '4px'
                     }}
                   />
-                  <span className={classes.span1}>{event.title}</span>
+                  <div className={classes.span1}>{event.title}</div>
                 </li>
               ))}
             </ul>
@@ -220,7 +224,7 @@
               ))}
             </tr>
           </thead>
-          <tbody>
+          <tbody className={classes.tbody}>
             {users.map((user) => (
               <tr key={user.id} className={classes.tableRow}>
                 <td className={classes.nameCell}><Icon name="AccountCircle" className={classes.icon} />
@@ -266,38 +270,48 @@
   styles: B => t => {
     const style = new B.Styling(t);
     return {
+
+      tbody: {
+        border: '1px solid #ddd',
+      },
       calendarContainer: {
         overflowX: 'auto',
         fontFamily: 'Arial, sans-serif',
+        color: '#033453'
       },
       calendarTable: {
         borderCollapse: 'collapse',
       },
-      tableHeader: {
-        whiteSpace: 'nowrap',
-        textAlign: 'center',
-        backgroundColor: '#F4F4F4',
-        fontSize: '14px',
-        padding: '8px',
-        borderBottom: '2px solid #ddd',
-        height: '40px',
-      },
-      tableRow: {
-        borderBottom: '2px solid #ddd',
-      },
       topwrapper: {
         display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        marginBottom: '10px',
+        alignItems: 'center'
       },
-      select: {
+      tableHeader: {
+        whiteSpace: 'nowrap',
+        textAlign: 'left',
+        fontSize: '14px',
+        padding: '8px',
+        height: '40px',
+      },
+      tableRow: {},
+      select1: {
         fontSize: '14px',
         color: '#333',
-        backgroundColor: '#F9F9F9',
+        backgroundColor: '#FFFFFF',
         border: '1px solid #ccc',
         borderRadius: '4px',
         padding: '5px',
+        height: '40px',
+        marginRight: '15px'
+      },
+      select2: {
+        fontSize: '14px',
+        color: '#333',
+        backgroundColor: '#FFFFFF',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        padding: '5px',
+        height: '40px'
       },
       tableCell: {
         textAlign: 'center',
@@ -312,13 +326,14 @@
       nameCell: {
         textAlign: 'left',
         height: '40px',
-        width: '150px',
+        width: '200px',
         padding: '8px',
-        border: '1px solid #ddd',
         fontWeight: 'bold',
-        backgroundColor: '#F9F9F9',
         whiteSpace: 'normal',
         overflow: 'visible',
+        display: 'flex',
+        alignItems: 'center',
+        border: '1px solid #ddd',  
       },
       eventLabel: {
         backgroundColor: 'inherit',
@@ -329,17 +344,19 @@
       },
       legendUl: {
         display: 'flex',
-        justifyContent: 'space-between',
         listStyleType: 'none',
-        padding: 0,
-        margin: '0 10px',
-        gap: '15px'
+        gap: '15px',
+      },
+      legendIl: {
+        display: 'flex',
+        alignItems: 'center',
       },
       icon: {
         fontSize: '50px',
-        color: "black",
-        marginRight: "10px"
+        color: "#033453",
+        marginRight: "10px",
       }
     };
   }
+  
 }))();
