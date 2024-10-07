@@ -9,6 +9,7 @@
       {
         id: 1,
         name: 'Alice',
+        role: 'LA',
         events: [
           { id: 'e1', name: 'Kickoff Meeting', startDate: '2024-10-01', endDate: '2024-10-01' },
           { id: 'e2', name: 'Weekly Standup', startDate: '2024-10-08', endDate: '2024-10-08' },
@@ -17,6 +18,7 @@
       {
         id: 2,
         name: 'Bob',
+        role: 'TAmp',
         events: [
           { id: 'e3', name: 'Project Review', startDate: '2024-10-03', endDate: '2024-10-03' },
         ],
@@ -24,6 +26,7 @@
       {
         id: 3,
         name: 'Charlie',
+        role: 'TAio',
         events: [
           { id: 'e4', name: 'Kickoff Meeting', startDate: '2024-10-01', endDate: '2024-10-01' },
           { id: 'e5', name: 'Code Review', startDate: '2021-10-07', endDate: '2021-10-07' },
@@ -32,6 +35,7 @@
       {
         id: 4,
         name: 'Diana',
+        role: 'TA',
         events: [
           { id: 'e6', name: 'Sprint Planning', startDate: '2024-10-06', endDate: '2024-10-06' },
           { id: 'e7', name: 'Kickoff Meeting', startDate: '2024-10-01', endDate: '2024-10-01' },
@@ -40,6 +44,7 @@
       {
         id: 5,
         name: 'Eve',
+        role: 'TAmp',
         events: [
           { id: 'e8', name: 'Client Demo', startDate: '2024-10-10', endDate: '2024-10-10' },
           { id: 'e9', name: 'Code Review', startDate: '2024-10-07', endDate: '2024-10-07' },
@@ -48,6 +53,7 @@
       {
         id: 6,
         name: 'Frank',
+        role: 'LA',
         events: [
           { id: 'e10', name: 'Project Review', startDate: '2024-10-03', endDate: '2024-10-03' },
           { id: 'e11', name: 'Weekly Standup', startDate: '2024-10-05', endDate: '2024-10-05' },
@@ -56,20 +62,23 @@
       {
         id: 7,
         name: 'Grace',
+        role: 'TAio',
         events: [
           { id: 'e12', name: 'Sprint Planning', startDate: '2024-10-06', endDate: '2024-10-06' },
           { id: 'e13', name: 'Client Demo', startDate: '2024-10-10', endDate: '2024-10-10' },
         ],
       },
     ];
+    
     const { env, Icon } = B;
     const isDev = env === 'dev';
 
     const colors = [
-      '#d3d7de',
       '#1f84d2',
+
       '#023a63',
       '#91abbe',
+      '#00CED1',
       '#d0010d',
       '#e2ac30',
       '#FF1493',
@@ -91,7 +100,7 @@
       const uniqueEvents = [];
       uniqueEvents.push({
         title: "Weekend",
-        color: "darkgray"
+        color: "#d3d7de"
       })
       users.forEach(user => {
         user.events.forEach(event => {
@@ -166,11 +175,6 @@
 
     return (
       <div className={classes.calendarContainer}>
-        {isDev && (
-          <div style={{ border: '1px dashed red', padding: '8px', marginBottom: '10px' }}>
-            <strong>Ontwikkelmodus:</strong> Deze component draait momenteel in de ontwikkelomgeving.
-          </div>
-        )}
         <div className={classes.topwrapper}>
           <Icon name="FileIcon" className={classes.icon}/>
           <select className={classes.select1} value={selectedYear} onChange={yearSelectChange}>
@@ -218,7 +222,8 @@
         <table className={classes.calendarTable} >
           <thead>
             <tr className={classes.tableRow}>
-              <th className={classes.tableHeader}>Name</th>
+              <th className={classes.tableHeader}>Name </th>
+              <th className={classes.tableHeader}>Role</th>
               {daysInMonth.map((day) => (
                 <th key={day.day} className={classes.tableHeader}>{day.day}</th>
               ))}
@@ -229,6 +234,7 @@
               <tr key={user.id} className={classes.tableRow}>
                 <td className={classes.nameCell}><Icon name="AccountCircle" className={classes.icon} />
                 {user.name}</td>
+                <td className={classes.rollCell}>{user.role}</td>
                 {daysInMonth.map((day) => {
                   const event = events.filter(event =>
                   (new Date(event.start).getDate() === day.day &&
@@ -244,7 +250,7 @@
                             ? { backgroundColor: event[0].color }
                             : {})
                           : {
-                            backgroundColor: "darkgray",
+                            backgroundColor: "#d3d7de",
 
                           }
                       }
@@ -253,6 +259,7 @@
                         <div className={classes.eventLabel}>
                           {event.map(Event => (
                             <div key={Event.id}>
+                              {Event.title === 'Kickoff Meeting' ? "#1" : ""  }
                             </div>
                           ))}
                         </div>
@@ -272,7 +279,7 @@
     return {
 
       tbody: {
-        border: '1px solid #ddd',
+        border: '1px solid ##d3d7de',
       },
       calendarContainer: {
         overflowX: 'auto',
@@ -298,7 +305,7 @@
         fontSize: '14px',
         color: '#333',
         backgroundColor: '#FFFFFF',
-        border: '1px solid #ccc',
+        border: '1px solid #d3d7de',
         borderRadius: '4px',
         padding: '5px',
         height: '40px',
@@ -308,14 +315,14 @@
         fontSize: '14px',
         color: '#333',
         backgroundColor: '#FFFFFF',
-        border: '1px solid #ccc',
+        border: '1px solid #d3d7de',
         borderRadius: '4px',
         padding: '5px',
         height: '40px'
       },
       tableCell: {
         textAlign: 'center',
-        border: '1px solid #ddd',
+        border: '1px solid #d3d7de',
         height: '40px',
         width: '40px',
         padding: '0px',
@@ -326,14 +333,31 @@
       nameCell: {
         textAlign: 'left',
         height: '40px',
-        width: '200px',
+        width: '150px',
         padding: '8px',
         fontWeight: 'bold',
         whiteSpace: 'normal',
         overflow: 'visible',
         display: 'flex',
         alignItems: 'center',
-        border: '1px solid #ddd',  
+        borderRight: 'none',
+        borderBottom: 'none',
+        borderLeft: '1px solid #d3d7de',
+        borderTop: '1px solid #d3d7de'
+      },
+      rollCell: {
+        textAlign: 'center',
+        height: '40px',
+        width: '50px',
+        fontWeight: 'bold',
+        whiteSpace: 'normal',
+        overflow: 'visible',
+        alignItems: 'center',
+        borderRight: '1px solid #d3d7de',
+        borderBottom: '1px solid #d3d7de',
+        borderLeft: 'none',
+        borderTop: '1px solid #d3d7de',
+        fontSize: '12px'
       },
       eventLabel: {
         backgroundColor: 'inherit',
