@@ -11,7 +11,7 @@
         name: 'Alice',
         events: [
           { id: 'e1', name: 'Kickoff Meeting', startDate: '2024-10-01', endDate: '2024-10-01' },
-          { id: 'e2', name: 'Weekly Standup', startDate: '2024-10-05', endDate: '2024-10-05' },
+          { id: 'e2', name: 'Weekly Standup', startDate: '2024-10-08', endDate: '2024-10-08' },
         ],
       },
       {
@@ -62,6 +62,8 @@
         ],
       },
     ];
+    const { env, Icon } = B;
+    const isDev = env === 'dev';
 
     const colors = [
       '#FF5733',
@@ -128,7 +130,6 @@
           weekend
         })
       }
-      console.log(days)
       return (days)
 
     };
@@ -161,14 +162,21 @@
 
     return (
       <div className={classes.calendarContainer}>
+        {isDev && (
+          <div style={{ border: '1px dashed red', padding: '8px', marginBottom: '10px' }}>
+            <strong>Ontwikkelmodus:</strong> Deze component draait momenteel in de ontwikkelomgeving.
+          </div>
+        )}
         <div className={classes.topwrapper}>
+          <Icon name="FileIcon" className={classes.icon}/>
           <select className={classes.select} value={selectedYear} onChange={yearSelectChange}>
             {Array.from({ length: 20 }, (_, i) => (
               <option key={i} value={currentYear - i}>{currentYear - i}</option>
             ))}
           </select>
 
-          <select className={classes.select} value={selectedMonth} onChange={monthSelectChange}>
+          <select className={classes.select} src="" value={selectedMonth} onChange={monthSelectChange}>
+          <Icon name="FileIcon" className={classes.icon}/>
             <option value="0">January</option>
             <option value="1">February</option>
             <option value="2">March</option>
@@ -208,14 +216,15 @@
             <tr className={classes.tableRow}>
               <th className={classes.tableHeader}>Name</th>
               {daysInMonth.map((day) => (
-                <th key={day.day} className={classes.tableHeader}>{day.day}{console.log("sdfdsgfaw", day.day)}</th>
+                <th key={day.day} className={classes.tableHeader}>{day.day}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.id} className={classes.tableRow}>
-                <td className={classes.nameCell}>{user.name}</td>
+                <td className={classes.nameCell}><Icon name="AccountCircle" className={classes.icon} />
+                {user.name}</td>
                 {daysInMonth.map((day) => {
                   const event = events.filter(event =>
                   (new Date(event.start).getDate() === day.day &&
@@ -223,7 +232,6 @@
                     new Date(event.start).getFullYear() === parseInt(selectedYear, 10) &&
                     event.resource === user.id)
                   )
-                  console.log(event)
                   return (
                     <td key={day.day} className={classes.tableCell}
                       style={
@@ -240,7 +248,8 @@
                       {event.length > 0 ? (
                         <div className={classes.eventLabel}>
                           {event.map(Event => (
-                            <div key={Event.id}></div>
+                            <div key={Event.id}>
+                            </div>
                           ))}
                         </div>
                       ) : null}
@@ -326,6 +335,11 @@
         margin: '0 10px',
         gap: '15px'
       },
+      icon: {
+        fontSize: '50px',
+        color: "black",
+        marginRight: "10px"
+      }
     };
   }
 }))();
