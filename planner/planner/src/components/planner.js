@@ -278,9 +278,6 @@
     const style = new B.Styling(t);
     return {
 
-      tbody: {
-        border: '1px solid ##d3d7de',
-      },
       calendarContainer: {
         overflowX: 'auto',
         fontFamily: 'Arial, sans-serif',
@@ -341,7 +338,7 @@
         display: 'flex',
         alignItems: 'center',
         borderRight: 'none',
-        borderBottom: 'none',
+        borderBottom: '1px solid #d3d7de',
         borderLeft: '1px solid #d3d7de',
         borderTop: '1px solid #d3d7de'
       },
@@ -354,7 +351,7 @@
         overflow: 'visible',
         alignItems: 'center',
         borderRight: '1px solid #d3d7de',
-        borderBottom: '1px solid #d3d7de',
+        borderBottom: '2px solid #d3d7de',
         borderLeft: 'none',
         borderTop: '1px solid #d3d7de',
         fontSize: '12px'
